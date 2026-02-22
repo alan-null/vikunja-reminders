@@ -1,0 +1,111 @@
+[
+    {
+        "id": 1,
+        "title": "ExampleTask",
+        "description": "<p>This is <strong>awesome!!</strong></p>",
+        "done": false,
+        "done_at": "0001-01-01T00:00:00Z",
+        "due_date": "0001-01-01T00:00:00Z",
+        "reminders": [
+            {
+                "reminder": "2026-02-22T17:34:00Z",
+                "relative_period": 0,
+                "relative_to": ""
+            }
+        ],
+        "project_id": 1,
+        "repeat_after": 0,
+        "repeat_mode": 0,
+        "priority": 4,
+        "start_date": "0001-01-01T00:00:00Z",
+        "end_date": "0001-01-01T00:00:00Z",
+        "assignees": null,
+        "labels": [
+            {
+                "id": 1,
+                "title": "a",
+                "description": "",
+                "hex_color": "fd8a09",
+                "created_by": {
+                    "id": 1,
+                    "name": "",
+                    "username": "Alan",
+                    "created": "2026-02-21T21:05:20Z",
+                    "updated": "2026-02-22T06:37:07Z"
+                },
+                "created": "2026-02-22T13:37:57Z",
+                "updated": "2026-02-22T13:44:08Z"
+            },
+            {
+                "id": 2,
+                "title": "b",
+                "description": "",
+                "hex_color": "0ead69",
+                "created_by": {
+                    "id": 1,
+                    "name": "",
+                    "username": "Alan",
+                    "created": "2026-02-21T21:05:20Z",
+                    "updated": "2026-02-22T06:37:07Z"
+                },
+                "created": "2026-02-22T13:37:58Z",
+                "updated": "2026-02-22T13:37:58Z"
+            },
+            {
+                "id": 3,
+                "title": "c",
+                "description": "",
+                "hex_color": "4c91ff",
+                "created_by": {
+                    "id": 1,
+                    "name": "",
+                    "username": "Alan",
+                    "created": "2026-02-21T21:05:20Z",
+                    "updated": "2026-02-22T06:37:07Z"
+                },
+                "created": "2026-02-22T13:37:59Z",
+                "updated": "2026-02-22T13:37:59Z"
+            }
+        ],
+        "hex_color": "",
+        "percent_done": 0,
+        "identifier": "#1",
+        "index": 1,
+        "related_tasks": {},
+        "attachments": [
+            {
+                "id": 1,
+                "task_id": 1,
+                "created_by": {
+                    "id": 1,
+                    "name": "",
+                    "username": "Alan",
+                    "created": "2026-02-21T21:05:20Z",
+                    "updated": "2026-02-22T06:37:07Z"
+                },
+                "file": {
+                    "id": 1,
+                    "name": "sample.mp4",
+                    "mime": "",
+                    "size": 778684,
+                    "created": "2026-02-22T13:37:06Z"
+                },
+                "created": "2026-02-22T13:37:06Z"
+            }
+        ],
+        "cover_image_attachment_id": 0,
+        "is_favorite": false,
+        "created": "2026-02-21T21:05:37Z",
+        "updated": "2026-02-22T17:34:02Z",
+        "bucket_id": 0,
+        "position": 0,
+        "reactions": null,
+        "created_by": {
+            "id": 1,
+            "name": "",
+            "username": "Alan",
+            "created": "2026-02-21T21:05:20Z",
+            "updated": "2026-02-22T06:37:07Z"
+        }
+    }
+]

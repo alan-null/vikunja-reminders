@@ -368,3 +368,17 @@ Run tests with:
 ```powershell
 pwsh -Command "Invoke-Pester -Output Detailed"
 ```
+
+Run integration tests for plugins with:
+
+```powershell
+# single plugin with custom options
+.\Tests\test-plugins.ps1 -Plugin 'debug' -Options @{ Key1 = "https://discord.com/api/webhooks/AAA/BBB/CCC" }
+
+# all plugins (make sure to set required options for each plugin in the command)
+.\Tests\test-plugins.ps1 -Options @{ webhook_url = "https://discord.com/api/webhooks/X/Y/Z" }
+```
+
+## Resources
+
+- [Vikunja API docs - filters](https://vikunja.io/docs/filters/#date-math)
