@@ -1,0 +1,14 @@
+services:
+  vikunja-reminder-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    volumes:
+      - ./state:/state
+      - ./config:/config
+      - ./plugins:/plugins
+    restart: unless-stopped

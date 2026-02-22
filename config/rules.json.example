@@ -1,0 +1,70 @@
+{
+  "$schema": "./../rules.schema.json",
+  "providers": {
+    "discord-main": {
+      "plugin": "discord",
+      "options": {
+        "webhook_url": "https://discord.com/api/webhooks/AAA/BBB/CCC"
+      }
+    },
+    "discord-important": {
+      "plugin": "discord",
+      "options": {
+        "webhook_url": "https://discord.com/api/webhooks/XXX/YYY/ZZZ"
+      }
+    },
+    "slack-team": {
+      "plugin": "slack",
+      "options": {
+        "webhook_url": "https://hooks.slack.com/services/XXX/YYY/ZZZ",
+        "channel": "#reminders"
+      }
+    }
+  },
+  "rules": [
+    {
+      "name": "Catch-all — every reminder",
+      "match": "all",
+      "conditions": [],
+      "providers": [ "discord-main"],
+      "stop_on_match": false
+    },
+    {
+      "name": "High priority tasks → two channels",
+      "match": "all",
+      "conditions": [
+        { "field": "priority", "op": ">=", "value": 3 }
+      ],
+      "providers": [ "discord-important", "slack-team" ],
+      "stop_on_match": false
+    },
+    {
+      "name": "Favorite tasks in project 1",
+      "match": "all",
+      "conditions": [
+        { "field": "project_id", "op": "=", "value": 1 },
+        { "field": "is_favorite", "op": "=", "value": true }
+      ],
+      "providers": [ "discord-main" ],
+      "stop_on_match": false
+    },
+    {
+      "name": "Tasks with attachments",
+      "match": "all",
+      "conditions": [
+        { "field": "has_attachments", "op": "=", "value": true }
+      ],
+      "providers": [ "discord-main" ],
+      "stop_on_match": false
+    },
+    {
+      "name": "Title contains keyword",
+      "match": "all",
+      "conditions": [
+        { "field": "title", "op": "contains", "value": "urgent" }
+      ],
+      "providers": [ "discord-important" ],
+      "stop_on_match": false
+    }
+  ]
+}

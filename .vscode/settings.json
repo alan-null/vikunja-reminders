@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.json.example": "json"
+  },
+  "files.exclude": {
+    "state": true
+  },
+  "json.validate.enable": true
+}

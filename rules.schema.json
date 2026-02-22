@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://your-domain/vikunja-reminder-agent/rules.schema.json",
+  "title": "Vikunja Reminder Agent — rules.json",
+  "description": "Configures notification provider instances and routing rules for the Vikunja Reminder Agent.",
+  "type": "object",
+  "required": ["providers", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "providers": {
+      "type": "object",
+      "description": "Named provider instances. Each key is a unique instance name you choose (e.g. 'discord-personal', 'slack-work'). Referenced by name in rule 'providers' arrays.",
+      "additionalProperties": {
+        "$ref": "#/$defs/ProviderInstance"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "description": "Ordered list of routing rules. Evaluated top-to-bottom for every reminder that fires.",
+      "items": {
+        "$ref": "#/$defs/Rule"
+      }
+    }
+  },
+  "$defs": {
+    "ProviderInstance": {
+      "type": "object",
+      "description": "A configured instance of a notification plugin.",
+      "required": ["plugin"],
+      "additionalProperties": false,
+      "properties": {
+        "plugin": {
+          "type": "string",
+          "description": "Plugin name — must match the name passed to Register-Plugin in the corresponding notification-*.ps1 file.",
+          "examples": ["discord", "slack", "ntfy"]
+        },
+        "options": {
+          "type": "object",
+          "description": "Plugin-specific options. Each plugin documents its own keys.",
+          "additionalProperties": true,
+          "properties": {
+            "webhook_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Webhook URL (used by discord and slack plugins)."
+            },
+            "channel": {
+              "type": "string",
+              "description": "Channel override, e.g. '#reminders' (slack plugin)."
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Topic URL (ntfy plugin)."
+            },
+            "token": {
+              "type": "string",
+              "description": "Bearer token for authenticated topics (ntfy plugin)."
+            },
+            "priority": {
+              "type": "string",
+              "description": "Message priority (ntfy plugin).",
+              "enum": ["min", "low", "default", "high", "urgent"]
+            }
+          }
+        }
+      }
+    },
+    "Rule": {
+      "type": "object",
+      "description": "A routing rule. When its conditions match, the listed providers are dispatched.",
+      "required": ["name", "conditions", "providers"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable rule name. Shown in agent logs when the rule fires.",
+          "minLength": 1
+        },
+        "match": {
+          "type": "string",
+          "description": "'all' = AND (every condition must pass). 'any' = OR (at least one condition must pass). Defaults to 'all' when omitted.",
+          "enum": ["all", "any"],
+          "default": "all"
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Conditions to evaluate against the task payload. Empty array [] matches every task (catch-all).",
+          "items": {
+            "$ref": "#/$defs/Condition"
+          }
+        },
+        "providers": {
+          "type": "array",
+          "description": "Provider instance names to invoke when this rule matches. Must reference keys defined in the top-level 'providers' object.",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "stop_on_match": {
+          "type": "boolean",
+          "description": "If true, stop evaluating further rules once this one matches (firewall-style). If false (default), continue evaluating all rules.",
+          "default": false
+        }
+      }
+    },
+    "Condition": {
+      "type": "object",
+      "description": "A single condition evaluated against a task payload field.",
+      "required": ["field", "op", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Task payload field to evaluate.",
+          "enum": [
+            "project_id",
+            "priority",
+            "percent_done",
+            "is_favorite",
+            "has_attachments",
+            "done",
+            "title",
+            "description",
+            "labels",
+            "assignees"
+          ]
+        },
+        "op": {
+          "type": "string",
+          "description": "Comparison operator.",
+          "enum": ["=", "!=", ">", ">=", "<", "<=", "contains", "not_contains", "in", "not_in"]
+        },
+        "value": {
+          "description": "Value to compare against. Type must be appropriate for the field and operator: integer for numeric fields, boolean for flag fields, string for text fields, array for 'in'/'not_in' operators.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "integer" },
+            { "type": "boolean" },
+            { "type": "array", "items": { "type": ["string", "integer"] } }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "description": "Boolean fields only support '=' and '!=' operators.",
+          "if": {
+            "properties": {
+              "field": { "enum": ["is_favorite", "has_attachments", "done"] }
+            }
+          },
+          "then": {
+            "properties": {
+              "op":    { "enum": ["=", "!="] },
+              "value": { "type": "boolean" }
+            }
+          }
+        },
+        {
+          "description": "Numeric fields support all comparison operators.",
+          "if": {
+            "properties": {
+              "field": { "enum": ["project_id", "priority", "percent_done", "assignees"] }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "oneOf": [
+                  { "type": "integer" },
+                  { "type": "array", "items": { "type": "integer" } }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "description": "'in' and 'not_in' operators require an array value.",
+          "if": {
+            "properties": { "op": { "enum": ["in", "not_in"] } }
+          },
+          "then": {
+            "properties": {
+              "value": { "type": "array" }
+            }
+          }
+        },
+        {
+          "description": "'contains' and 'not_contains' operators are only valid for string fields.",
+          "if": {
+            "properties": { "op": { "enum": ["contains", "not_contains"] } }
+          },
+          "then": {
+            "properties": {
+              "field": { "enum": ["title", "description"] },
+              "value": { "type": "string" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
