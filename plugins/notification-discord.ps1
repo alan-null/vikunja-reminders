@@ -27,7 +27,7 @@ Register-Plugin -Name "discord" -ScriptBlock {
                 fields      = @(
                     @{ name = "📅 Reminder time"; value = $Payload.ReminderStr; inline = $true }
                     @{ name = "⚠ Priority"; value = "$($Payload.Priority)"; inline = $true }
-                    @{ name = "✅ Done"; value = $task.done.ToString(); inline = $true }
+                    @{ name = "✅ Done"; value = $Payload.Done.ToString(); inline = $true }
                     @{ name = "🗂️ Project"; value = "ID $($Payload.ProjectId)"; inline = $true }
                 )
                 footer      = @{ text = "Vikunja • Task #$($Payload.TaskId)" }
