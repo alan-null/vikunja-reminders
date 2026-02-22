@@ -27,12 +27,22 @@ The **plugin** files live in `/plugins/`. The **provider instances and rules** a
 ```
 /
 ├── Dockerfile                    ← Dockerfile for the agent
+├── docker-compose.yml            ← example Docker Compose config for self-hosted setup
+├── .env                          ← [CREATE] env variables file
+├── .env.example                  ← example env file with descriptions
 ├── main.ps1                      ← main agent (do not edit)
 ├── plugins/                      ← notification plugins
+├── state/
+│   └── fired_reminders.json      ← internal file to track which reminders have been fired (do not edit)
+├── ReminderEngine.psm1           ← core engine logic (do not edit)
+├── ReminderEngine.Tests.ps1      ← Pester tests for the engine
 │   ├── notification-discord.ps1
+│   ├── notification-debug.ps1
 │   └── notification-myapp.ps1    ← drop new plugins here
-└── config/
-    └── rules.json                ← your day-to-day config
+├── config/
+│   ├── rules.json                ← [CREATE] your day-to-day config
+│   └── rules.json.example        ← example config with comments and explanations
+└── rules.schema.json             ← JSON Schema for validating rules.json (do not edit)
 ```
 
 ## Docker
